@@ -1,9 +1,11 @@
 
-#version 430 core
+#version 430 core 
+
+in vec4 vertexColor;
 
 out vec4 FragColor;
 
 void main()
 {
-    FragColor = vec4(0.5f);
+    FragColor = vertexColor; 
 }

@@ -80,6 +80,11 @@ void OpenGLApp::Render()
 	//glClear(GL_DEPTH_BUFFER_BIT);
 }
 
+void OpenGLApp::UpdateScene()
+{
+
+}
+
 void OpenGLApp::Run()
 {
 	OpenGLApp::OnResize(m_screenWidth, m_screenHeight);
@@ -87,6 +92,7 @@ void OpenGLApp::Run()
 	while (!glfwWindowShouldClose(m_screenWindow))
 	{ 
 		ProcessInput();
+		UpdateScene();
 
 		Render();
 

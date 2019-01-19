@@ -17,6 +17,7 @@ public:
 	virtual void OnResize(unsigned int width, unsigned int height);
 	virtual void ProcessInput();
 	virtual void Render();
+	virtual void UpdateScene();
 
 	void Run();
 

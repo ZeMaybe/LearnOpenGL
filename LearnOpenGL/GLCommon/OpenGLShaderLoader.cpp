@@ -98,4 +98,90 @@ int OpenGLShaderLoader::LinkShaderProgram(std::vector<int> shaders)
 	}
 
 	return shaderProgram;
+}
+
+OpenGLShaderLoader::Shader::Shader(const GLchar* vertexShaderSource, const GLchar* fragmentShaderSource, bool useFile)
+{
+	int vertexShader, fragmentShader;
+
+	if (useFile)
+	{
+		vertexShader = LoadShaderFromFile(vertexShaderSource, GL_VERTEX_SHADER);
+		fragmentShader = LoadShaderFromFile(fragmentShaderSource, GL_FRAGMENT_SHADER);
+	}
+	else
+	{
+		vertexShader = LoadShaderFromString(vertexShaderSource, GL_VERTEX_SHADER);
+		fragmentShader = LoadShaderFromString(fragmentShaderSource, GL_FRAGMENT_SHADER);
+	}
+
+	assert(vertexShader != 0);
+	assert(fragmentShader != 0);
+
+	std::vector<int> shaders;
+	shaders.push_back(vertexShader);
+	shaders.push_back(fragmentShader);
+	m_shaderProgram = LinkShaderProgram(shaders);
+
+	assert(m_shaderProgram != 0);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+}
+
+OpenGLShaderLoader::Shader::~Shader()
+{
+
+}
+
+void OpenGLShaderLoader::Shader::Use()
+{
+	glUseProgram(m_shaderProgram); 
+}
+
+void OpenGLShaderLoader::Shader::SetBool(const GLchar* name, bool v) const
+{
+	glUniform1i(glGetUniformLocation(m_shaderProgram, name), (int)v);
 } 
+
+void OpenGLShaderLoader::Shader::SetInt(const GLchar* name, int v0) const
+{
+	glUniform1i(glGetUniformLocation(m_shaderProgram, name), v0); 
+}
+
+void OpenGLShaderLoader::Shader::SetInt(const GLchar* name, int v0, int v1) const
+{
+	glUniform2i(glGetUniformLocation(m_shaderProgram, name), v0, v1);
+}
+
+void OpenGLShaderLoader::Shader::SetInt(const GLchar* name, int v0, int v1, int v2) const
+{
+	glUniform3i(glGetUniformLocation(m_shaderProgram, name), v0, v1, v2);
+}
+
+void OpenGLShaderLoader::Shader::SetInt(const GLchar* name, int v0, int v1, int v2, int v3) const
+{
+	glUniform4i(glGetUniformLocation(m_shaderProgram, name), v0,v1,v2,v3);
+}
+
+void OpenGLShaderLoader::Shader::SetFloat(const GLchar* name, float v0) const
+{
+	glUniform1f(glGetUniformLocation(m_shaderProgram, name), v0);
+}
+
+void OpenGLShaderLoader::Shader::SetFloat(const GLchar* name, float v0, float v1) const
+{
+	glUniform2f(glGetUniformLocation(m_shaderProgram, name), v0, v1);
+}
+
+void OpenGLShaderLoader::Shader::SetFloat(const GLchar* name, float v0, float v1, float v2) const
+{
+	glUniform3f(glGetUniformLocation(m_shaderProgram, name), v0, v1,v2);
+}
+
+void OpenGLShaderLoader::Shader::SetFloat(const GLchar* name, float v0, float v1, float v2, float v3) const
+{
+	glUniform4f(glGetUniformLocation(m_shaderProgram, name), v0, v1, v2,v3);
+}
+
+

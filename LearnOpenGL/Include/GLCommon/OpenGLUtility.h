@@ -8,5 +8,7 @@
 #include <iostream>
 #include <assert.h>
 
+#define SAFE_DELETE_POINT(p) if(p){delete p; p = 0;}
+#define SAFE_DELETE_ARRAY(p) if(p){delete [] p;p = 0;}
 
 #endif // OpenGLUtility_h__

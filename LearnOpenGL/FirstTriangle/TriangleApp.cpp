@@ -1,6 +1,5 @@
 
 #include "TriangleApp.h"
-#include "GLCommon/OpenGLShaderLoader.h"
 
 TriangleApp theApp;
 
@@ -12,7 +11,7 @@ TriangleApp::TriangleApp()
 
 TriangleApp::~TriangleApp()
 {
-
+	SAFE_DELETE_POINT(m_shader);
 }
 
 bool TriangleApp::Init()
@@ -20,10 +19,12 @@ bool TriangleApp::Init()
 	if(!OpenGLApp::Init())
 		return false;
 
-	LoadShader();
+	m_shader = new OpenGLShaderLoader::Shader("../GLSL/first_triangle_vertex.glsl",
+		"../GLSL/first_triangle_fragment.glsl");
+
 	BUildVAO();
 
-	glUseProgram(m_shaderProgram);
+	m_shader->Use();
 	glBindVertexArray(m_vao);
 
 	return true;
@@ -37,6 +38,14 @@ void TriangleApp::OnResize(unsigned int width, unsigned int height)
 void TriangleApp::ProcessInput()
 {
 	OpenGLApp::ProcessInput();
+}
+
+void TriangleApp::UpdateScene()
+{
+	float timeValue = glfwGetTime();
+	float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+	float redValue = cos(greenValue)/2.0f + 0.5f;
+	m_shader->SetFloat("timeColor",redValue,greenValue,greenValue,1.0f);	
 }
 
 void TriangleApp::Render()
@@ -60,10 +69,11 @@ void TriangleApp::BUildVAO()
 {
 	// vertices
 	float vertices[] = {
-		0.5f,0.5f,0.0f,       // top right
-		0.5f,-0.5f,0.0f,      // bottom right
-		-0.5f,-0.5f,0.0f,     // bottom left
-		-0.5f,0.5f,0.0f       // top left
+		// pos            // color
+		0.5f,0.5f,0.0f,   1.0f,1.0f,1.0f,    // top right
+		0.5f,-0.5f,0.0f,  1.0f,1.0f,0.0f,    // bottom right
+		-0.5f,-0.5f,0.0f, 1.0f,0.0f,0.0f,    // bottom left
+		-0.5f,0.5f,0.0f,  0.0f,0.0f,0.0f     // top left
 	};
 	unsigned int indices[] = {
 		0,1,3,
@@ -82,8 +92,10 @@ void TriangleApp::BUildVAO()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
@@ -102,24 +114,3 @@ void TriangleApp::BUildVAO()
 //"{\n"
 //"	FragColor = vec4(0.5f);\n"
 //"}\n\0";
-
-void TriangleApp::LoadShader()
-{
-	int vertexShader = OpenGLShaderLoader::LoadShaderFromFile("../GLSL/first_triangle_vertex.glsl",
-		GL_VERTEX_SHADER);
-	int fragmentShader = OpenGLShaderLoader::LoadShaderFromFile("../GLSL/first_triangle_fragment.glsl",
-		GL_FRAGMENT_SHADER);
-
-	assert(vertexShader != 0);
-	assert(fragmentShader != 0);
-
-	std::vector<int> shaders;
-	shaders.push_back(vertexShader);
-	shaders.push_back(fragmentShader);
-
-	m_shaderProgram = OpenGLShaderLoader::LinkShaderProgram(shaders);
-	assert(m_shaderProgram != 0);
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-}
