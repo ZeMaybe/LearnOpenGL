@@ -52,9 +52,10 @@ int OpenGLShaderLoader::LoadShaderFromFile(const char* shaderPath, unsigned int 
 		return 0;
 	}
 
-	char* shaderSource = new char(len + 1);
-	fin.readsome(shaderSource, len);
-
+	char* shaderSource = new char[len + 1];
+	memset(shaderSource, 0, len + 1);
+	fin.read(shaderSource, len);
+	
 	int shader = LoadShaderFromString(shaderSource, shaderType);
 
 	delete[] shaderSource;

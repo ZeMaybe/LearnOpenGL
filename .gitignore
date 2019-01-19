@@ -333,3 +333,4 @@ ASALocalRun/
 *.txt
 /LearnOpenGL/Libs/Debug/GLCommon.lib
 /LearnOpenGL/Libs/Release/GLCommon.lib
+*.exe

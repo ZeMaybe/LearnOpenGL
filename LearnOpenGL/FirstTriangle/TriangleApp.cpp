@@ -89,24 +89,26 @@ void TriangleApp::BUildVAO()
 	glBindVertexArray(0);
 }
 
-const char * vertexShaderSource = "#version 430 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"	gl_Position = vec4(aPos,1.0);\n"
-"}\n\0";
-
-const char* fragmentShaderSource = "#version 430 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"	FragColor = vec4(0.5f);\n"
-"}\n\0";
+//const char * vertexShaderSource = "#version 430 core\n"
+//"layout (location = 0) in vec3 aPos;\n"
+//"void main()\n"
+//"{\n"
+//"	gl_Position = vec4(aPos,1.0);\n"
+//"}\n\0";
+//
+//const char* fragmentShaderSource = "#version 430 core\n"
+//"out vec4 FragColor;\n"
+//"void main()\n"
+//"{\n"
+//"	FragColor = vec4(0.5f);\n"
+//"}\n\0";
 
 void TriangleApp::LoadShader()
 {
-	int vertexShader = OpenGLShaderLoader::LoadShaderFromString(vertexShaderSource, GL_VERTEX_SHADER);
-	int fragmentShader = OpenGLShaderLoader::LoadShaderFromString(fragmentShaderSource, GL_FRAGMENT_SHADER);
+	int vertexShader = OpenGLShaderLoader::LoadShaderFromFile("../GLSL/first_triangle_vertex.glsl",
+		GL_VERTEX_SHADER);
+	int fragmentShader = OpenGLShaderLoader::LoadShaderFromFile("../GLSL/first_triangle_fragment.glsl",
+		GL_FRAGMENT_SHADER);
 
 	assert(vertexShader != 0);
 	assert(fragmentShader != 0);
