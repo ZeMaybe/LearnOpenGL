@@ -131,7 +131,7 @@ OpenGLShaderLoader::Shader::Shader(const GLchar* vertexShaderSource, const GLcha
 
 OpenGLShaderLoader::Shader::~Shader()
 {
-
+	glDeleteProgram(m_shaderProgram);
 }
 
 void OpenGLShaderLoader::Shader::Use()
