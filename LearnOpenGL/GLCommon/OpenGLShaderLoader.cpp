@@ -1,6 +1,7 @@
 
 #include "GLCommon/OpenGLShaderLoader.h"
 #include <fstream>
+#include <glm/gtc/type_ptr.hpp>
 
 int OpenGLShaderLoader::LoadShaderFromString(const char* shaderSource, unsigned int shaderType)
 { 
@@ -162,6 +163,11 @@ void OpenGLShaderLoader::Shader::SetInt(const GLchar* name, int v0, int v1, int 
 void OpenGLShaderLoader::Shader::SetInt(const GLchar* name, int v0, int v1, int v2, int v3) const
 {
 	glUniform4i(glGetUniformLocation(m_shaderProgram, name), v0,v1,v2,v3);
+}
+
+void OpenGLShaderLoader::Shader::SetMat4(const GLchar* name, glm::mat4& mat)const
+{
+	glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, name), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 void OpenGLShaderLoader::Shader::SetFloat(const GLchar* name, float v0) const

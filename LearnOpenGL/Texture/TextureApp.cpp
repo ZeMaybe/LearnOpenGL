@@ -1,12 +1,15 @@
 
 #include "TextureApp.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 TextureApp theApp;
 
 TextureApp::TextureApp()
 	:OpenGLApp("Texture")
 {
-
 }
 
 TextureApp::~TextureApp()
@@ -54,6 +57,11 @@ void TextureApp::UpdateScene()
 {
 	float mixValue = (sin(glfwGetTime()) + 1.0f)*0.5f;
 	m_shader->SetFloat("mixValue", mixValue); 
+
+	glm::mat4x4 trans = glm::mat4x4(1.0f);
+	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+	trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+	m_shader->SetMat4("transform", trans);
 }
 
 void TextureApp::Render()
@@ -78,10 +86,10 @@ void TextureApp::BUildVAO()
 	// vertices
 	float vertices[] = {
 		// pos            // color        // uv
-		0.5f,0.5f,0.0f,   1.0f,1.0f,1.0f, 1.0f, 1.0f, // top right
-		0.5f,-0.5f,0.0f,  1.0f,1.0f,0.0f, 1.0f, 0.0f, // bottom right
-		-0.5f,-0.5f,0.0f, 1.0f,0.0f,0.0f, 0.0f, 0.0f, // bottom left
-		-0.5f,0.5f,0.0f,  0.0f,0.0f,0.0f, 0.0f, 1.0f  // top left
+		0.5f,0.5f,0.0f,   1.0f,0.0f,0.0f, 1.0f, 1.0f, // top right
+		0.5f,-0.5f,0.0f,  0.0f,1.0f,0.0f, 1.0f, 0.0f, // bottom right
+		-0.5f,-0.5f,0.0f, 0.0f,0.0f,1.0f, 0.0f, 0.0f, // bottom left
+		-0.5f,0.5f,0.0f,  0.5f,0.5f,0.5f, 0.0f, 1.0f  // top left
 	};
 	unsigned int indices[] = {
 		0,1,3,

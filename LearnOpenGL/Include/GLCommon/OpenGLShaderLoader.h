@@ -4,6 +4,7 @@
 
 #include "GLCommon/OpenGLUtility.h"
 #include <vector>
+#include <glm/glm.hpp> 
 
 namespace OpenGLShaderLoader
 {
@@ -34,6 +35,8 @@ namespace OpenGLShaderLoader
 		void SetInt(const GLchar* name, int v0,int v1)const;
 		void SetInt(const GLchar* name, int v0,int v1,int v2)const;
 		void SetInt(const GLchar* name, int v0,int v1,int v2,int v3)const;
+
+		void SetMat4(const GLchar* name, glm::mat4& mat)const;
 
 	private:
 		int m_shaderProgram = 0; 

@@ -3,6 +3,7 @@
 #define OpenGLAPP_h__
 
 #include "GLCommon/OpenGLUtility.h"
+#include "GLCommon/OpenGLCamera.h"
 
 class OpenGLApp
 {
@@ -15,6 +16,9 @@ public:
 	virtual bool Init(); 
 
 	virtual void OnResize(unsigned int width, unsigned int height);
+	virtual void OnMouseMove(double xpos,double ypos);
+	virtual void OnMouseScroll(double xoffset,double yoffset);
+
 	virtual void ProcessInput();
 	virtual void Render();
 	virtual void UpdateScene();
@@ -40,9 +44,14 @@ protected:
 	int m_glProfile = GLFW_OPENGL_CORE_PROFILE;
 
 	GLFWwindow* m_screenWindow = 0;
+
+	double m_lastFrame = 0.0;
+	float m_deltaTime = 0.0f;
+
+	double m_lastMouseX = 0.0;
+	double m_lastMouseY = 0.0;
+
+	OpenGLCamera::FPCamera* m_camera = 0;
 };
-
-
-
 
 #endif // OpenGLAPP_h__

@@ -10,6 +10,20 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	OpenGLApp::theApp->OnResize(width,height);
 }
 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	assert(window == OpenGLApp::theApp->ScreenWindow());
+
+	OpenGLApp::theApp->OnMouseMove(xpos, ypos);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	assert(window == OpenGLApp::theApp->ScreenWindow());
+
+	OpenGLApp::theApp->OnMouseScroll(xoffset, yoffset);
+}
+
 OpenGLApp::OpenGLApp(char* windowTitle /*= "OpenGLWnd"*/)
 	:m_windowTitle(windowTitle)
 {
@@ -30,7 +44,7 @@ OpenGLApp::OpenGLApp(char* windowTitle, unsigned int screenWidth, unsigned int s
 
 OpenGLApp::~OpenGLApp()
 {
-
+	SAFE_DELETE_POINT(m_camera);
 }
 
 bool OpenGLApp::Init()
@@ -40,7 +54,7 @@ bool OpenGLApp::Init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, m_glVersionMinor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, m_glProfile);
 
-	m_screenWindow = glfwCreateWindow(800, 600, m_windowTitle, NULL, NULL);
+	m_screenWindow = glfwCreateWindow(m_screenWidth, m_screenHeight, m_windowTitle, NULL, NULL);
 	if (m_screenWindow == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -56,6 +70,10 @@ bool OpenGLApp::Init()
 		return false;
 	}
 	glfwSetFramebufferSizeCallback(m_screenWindow, framebuffer_size_callback);
+	glfwSetCursorPosCallback(m_screenWindow, mouse_callback);
+	glfwSetScrollCallback(m_screenWindow, scroll_callback);
+
+	//glfwSetInputMode(m_screenWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	return true;
 }
@@ -67,17 +85,54 @@ void OpenGLApp::OnResize(unsigned int width, unsigned int height)
 	glViewport(0, 0, width, height); 
 }
 
+void OpenGLApp::OnMouseMove(double xpos, double ypos)
+{
+	static bool isFirstMouse = true;
+	if (isFirstMouse)
+	{
+		m_lastMouseX = xpos;
+		m_lastMouseY = ypos;
+		isFirstMouse = false;
+	}
+
+	float xoffset = xpos - m_lastMouseX;
+	float yoffset = ypos - m_lastMouseY;
+
+	m_lastMouseX = xpos;
+	m_lastMouseY = ypos;
+
+	if (m_camera)
+		m_camera->ProcessMouseMovement(xoffset, yoffset);
+}
+
+void OpenGLApp::OnMouseScroll(double xoffset, double yoffset)
+{
+	if (m_camera)
+		m_camera->ProcessMouseScroll(yoffset);
+}
+
 void OpenGLApp::ProcessInput()
 {
 	if (glfwGetKey(m_screenWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(m_screenWindow, true);
+
+	if (m_camera)
+	{
+		if (glfwGetKey(m_screenWindow, GLFW_KEY_W) == GLFW_PRESS)
+			m_camera->ProcessKeyboard(OpenGLCamera::FORWARD, m_deltaTime);
+		if (glfwGetKey(m_screenWindow, GLFW_KEY_S) == GLFW_PRESS)
+			m_camera->ProcessKeyboard(OpenGLCamera::BACKWARD, m_deltaTime);
+		if (glfwGetKey(m_screenWindow, GLFW_KEY_A) == GLFW_PRESS)
+			m_camera->ProcessKeyboard(OpenGLCamera::LEFT, m_deltaTime);
+		if (glfwGetKey(m_screenWindow, GLFW_KEY_D) == GLFW_PRESS)
+			m_camera->ProcessKeyboard(OpenGLCamera::RIGHT, m_deltaTime); 
+	}
 }
 
 void OpenGLApp::Render()
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	//glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void OpenGLApp::UpdateScene()
@@ -89,24 +144,21 @@ void OpenGLApp::Run()
 {
 	OpenGLApp::OnResize(m_screenWidth, m_screenHeight);
 
+	double currentFrame;
+
 	while (!glfwWindowShouldClose(m_screenWindow))
 	{ 
+		currentFrame = glfwGetTime();
+		m_deltaTime = currentFrame - m_lastFrame;
+		m_lastFrame = currentFrame;
+
 		ProcessInput();
 		UpdateScene();
 
 		Render();
 
 		glfwPollEvents(); 
-	}
-	
-	/*
-	glUseProgram(shaderProgram);
-	glBindVertexArray(VAO);
-
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-	glfwSwapBuffers(window);
-	*/
+	}	
 }
 
 void OpenGLApp::ClearnUp()

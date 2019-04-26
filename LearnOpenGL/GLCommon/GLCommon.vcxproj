@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\GLCommon\OpenGLAPP.h" />
+    <ClInclude Include="..\Include\GLCommon\OpenGLCamera.h" />
     <ClInclude Include="..\Include\GLCommon\OpenGLShaderLoader.h" />
     <ClInclude Include="..\Include\GLCommon\OpenGLTexture.h" />
     <ClInclude Include="..\Include\GLCommon\OpenGLUtility.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="..\Include\glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OpenGLApp.cpp" />
+    <ClCompile Include="OpenGLCamera.cpp" />
     <ClCompile Include="OpenGLShaderLoader.cpp" />
     <ClCompile Include="OpenGLTexture.cpp" />
     <ClCompile Include="stb_image.cpp" />
