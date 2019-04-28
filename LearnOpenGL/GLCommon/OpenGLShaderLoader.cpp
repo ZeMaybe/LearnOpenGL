@@ -165,6 +165,17 @@ void OpenGLShaderLoader::Shader::SetInt(const GLchar* name, int v0, int v1, int 
 	glUniform4i(glGetUniformLocation(m_shaderProgram, name), v0,v1,v2,v3);
 }
 
+void OpenGLShaderLoader::Shader::SetVec3(const GLchar* name, float v0, float v1, float v2)const
+{
+	glm::vec3 tmp(v0, v1, v2);
+	glUniform3fv(glGetUniformLocation(m_shaderProgram, name),1, glm::value_ptr(tmp));
+}
+
+void OpenGLShaderLoader::Shader::SetVec3(const GLchar* name, glm::vec3& vec)const
+{
+	glUniform3fv(glGetUniformLocation(m_shaderProgram, name), 1, glm::value_ptr(vec)); 
+}
+
 void OpenGLShaderLoader::Shader::SetMat4(const GLchar* name, glm::mat4& mat)const
 {
 	glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, name), 1, GL_FALSE, glm::value_ptr(mat));

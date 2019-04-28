@@ -36,6 +36,8 @@ namespace OpenGLShaderLoader
 		void SetInt(const GLchar* name, int v0,int v1,int v2)const;
 		void SetInt(const GLchar* name, int v0,int v1,int v2,int v3)const;
 
+		void SetVec3(const GLchar* name, float v0, float v1, float v2)const;
+		void SetVec3(const GLchar* name, glm::vec3& vec)const;
 		void SetMat4(const GLchar* name, glm::mat4& mat)const;
 
 	private:

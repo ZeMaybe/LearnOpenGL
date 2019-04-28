@@ -5,11 +5,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 BoxApp theApp;
 
 BoxApp::BoxApp()
-	:OpenGLApp("Texture")
-{
+	:OpenGLApp("Box")
+{ 
 }
 
 BoxApp::~BoxApp()
@@ -29,6 +33,10 @@ bool BoxApp::Init()
 
 	m_texture01.Load("../Images/wall.jpg");
 	m_texture02.Load("../Images/awesomeface.png");
+
+	// 测试模型加载 -- 无实际解析代码
+	Assimp::Importer importer;
+	const aiScene * scene = importer.ReadFile("../Models/nanosuit/nanosuit.obj", aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	BUildVAO();
 
