@@ -8,7 +8,7 @@
 using namespace GLCommon;
 using namespace std;
 
-Model::Model(string const &path, bool gamma = false)
+Model::Model(string const &path, bool gamma)
 	:m_gammaCorrection(gamma)
 {
 	LoadModel(path);
@@ -82,7 +82,7 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 
 	}
 
-
+	return Mesh(vertices,indices,textures);
 
 }
 
