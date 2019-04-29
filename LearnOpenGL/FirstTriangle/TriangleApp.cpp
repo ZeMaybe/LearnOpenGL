@@ -1,5 +1,6 @@
 
 #include "TriangleApp.h"
+#include "GLCommon/FileSystem.h"
 
 TriangleApp theApp;
 
@@ -19,8 +20,9 @@ bool TriangleApp::Init()
 	if(!OpenGLApp::Init())
 		return false;
 
-	m_shader = new OpenGLShaderLoader::Shader("../GLSL/first_triangle_vertex.glsl",
-		"../GLSL/first_triangle_fragment.glsl");
+	GLCommon::OpenGLFileSystem fs;
+	m_shader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder() + "first_triangle_vertex.glsl",
+		fs.GetShaderFolder() + "first_triangle_fragment.glsl");
 
 	BUildVAO();
 

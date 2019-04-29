@@ -12,6 +12,11 @@ OpenGLImageLoader::Texture2D::~Texture2D()
 	glDeleteTextures(1, &m_texture);
 }
 
+void OpenGLImageLoader::Texture2D::Load(std::string imagePath)
+{
+	Load(imagePath.c_str());
+}
+
 void OpenGLImageLoader::Texture2D::Load(const GLchar* imagePath)
 {
 	// ªÒ»° ID

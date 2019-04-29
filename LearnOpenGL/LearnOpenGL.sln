@@ -28,6 +28,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Light", "Light\Light.vcxpro
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LightingMaps", "LightingMaps\LightingMaps.vcxproj", "{D6FAD5B4-FB44-4CD7-93BD-2F42A512E3DC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C8DF95EE-FB82-4EB7-B3FE-040E57B56D28} = {C8DF95EE-FB82-4EB7-B3FE-040E57B56D28}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -18,6 +18,7 @@ namespace OpenGLImageLoader
 		unsigned int Texture()const { return m_texture; }
 
 	public:
+		void Load(std::string imagePath);
 		void Load(const GLchar* imagePath);
 		void SetParams(int wh, int wv, int minFilter, int magFilter);
 

@@ -21,7 +21,8 @@ namespace OpenGLShaderLoader
 	class Shader
 	{
 	public:
-		Shader(const GLchar* vertexShaderSource,const GLchar* fragmentShaderSource,bool useFile = true);
+		Shader(const GLchar* vertexShaderSource, const GLchar* fragmentShaderSource, bool useFile = true);
+		Shader(std::string vertexShaderSource, std::string fragmentShaderSource);
 		~Shader();
 
 		void Use(); 

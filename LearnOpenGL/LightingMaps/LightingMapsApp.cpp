@@ -1,5 +1,6 @@
 
 #include "LightingMapsApp.h"
+#include "GLCommon/FileSystem.h"
 
 LightingMapsApp theApp;
 
@@ -21,15 +22,17 @@ bool LightingMapsApp::Init()
 
 	m_camera = new OpenGLCamera::FPCamera(glm::vec3(0.0f, 0.0f, 10.0f));
 
-	m_shader = new OpenGLShaderLoader::Shader("../GLSL/lightingmaps_vertex.glsl",
-		"../GLSL/lightingmaps_fragment.glsl");
-	m_lightShader = new OpenGLShaderLoader::Shader("../GLSL/light_vertex2.glsl",
-		"../GLSL/light_fragment2.glsl");
+	GLCommon::OpenGLFileSystem fs;
+	m_shader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder() + "lightingmaps_vertex.glsl",
+		fs.GetShaderFolder() + "lightingmaps_fragment.glsl");
+
+	m_lightShader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder() + "light_vertex2.glsl", 
+		fs.GetShaderFolder() + "light_fragment2.glsl");
 
 	BUildVAO();
 
-	m_diffuseMap.Load("../Images/box.png");
-	m_specularMap.Load("../Images/box_specular.png");
+	m_diffuseMap.Load(fs.GetTextureFolder() + "box.png");
+	m_specularMap.Load(fs.GetTextureFolder() + "box_specular.png");
 
 	m_shader->Use();
 	m_shader->SetInt("material.diffuse", 0);

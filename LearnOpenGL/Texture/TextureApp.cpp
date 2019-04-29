@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "GLCommon/FileSystem.h"
 
 TextureApp theApp;
 
@@ -22,11 +23,12 @@ bool TextureApp::Init()
 	if (!OpenGLApp::Init())
 		return false;
 
-	m_shader = new OpenGLShaderLoader::Shader("../GLSL/texture_vertex.glsl", 
-		"../GLSL/texture_fragment.glsl");
+	GLCommon::OpenGLFileSystem fs;
+	m_shader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder()+"texture_vertex.glsl", 
+		fs.GetShaderFolder()+"texture_fragment.glsl");
 
-	m_texture01.Load("../Images/wall.jpg");
-	m_texture02.Load("../Images/awesomeface.png");
+	m_texture01.Load(fs.GetTextureFolder()+"wall.jpg");
+	m_texture02.Load(fs.GetTextureFolder()+"awesomeface.png");
 
 	BUildVAO();
 

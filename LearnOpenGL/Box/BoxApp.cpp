@@ -9,6 +9,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "GLCommon/FileSystem.h"
+
 BoxApp theApp;
 
 BoxApp::BoxApp()
@@ -28,15 +30,19 @@ bool BoxApp::Init()
 
 	m_camera = new OpenGLCamera::FPCamera();
 
-	m_shader = new OpenGLShaderLoader::Shader("../GLSL/box_vertex.glsl",
-		"../GLSL/box_fragment.glsl");
+	GLCommon::OpenGLFileSystem fs;
 
-	m_texture01.Load("../Images/wall.jpg");
-	m_texture02.Load("../Images/awesomeface.png");
+	m_shader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder() + "box_vertex.glsl",
+		fs.GetShaderFolder() + "box_fragment.glsl");
+
+	m_texture01.Load(fs.GetTextureFolder() + "wall.jpg");
+	m_texture02.Load(fs.GetTextureFolder() + "awesomeface.png");
 
 	// 测试模型加载 -- 无实际解析代码
+
+	std::string path = fs.GetModelsFolder() + "nanosuit/nanosuit.obj";
 	Assimp::Importer importer;
-	const aiScene * scene = importer.ReadFile("../Models/nanosuit/nanosuit.obj", aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene * scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	BUildVAO();
 

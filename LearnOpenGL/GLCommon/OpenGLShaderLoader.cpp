@@ -101,6 +101,27 @@ int OpenGLShaderLoader::LinkShaderProgram(std::vector<int> shaders)
 	return shaderProgram;
 }
 
+OpenGLShaderLoader::Shader::Shader(std::string vertexShaderSource, std::string fragmentShaderSource)
+{
+	int vertexShader, fragmentShader;
+
+	vertexShader = LoadShaderFromFile(vertexShaderSource.c_str(), GL_VERTEX_SHADER);
+	fragmentShader = LoadShaderFromFile(fragmentShaderSource.c_str(), GL_FRAGMENT_SHADER);
+
+	assert(vertexShader != 0);
+	assert(fragmentShader != 0);
+
+	std::vector<int> shaders;
+	shaders.push_back(vertexShader);
+	shaders.push_back(fragmentShader);
+	m_shaderProgram = LinkShaderProgram(shaders);
+
+	assert(m_shaderProgram != 0);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+}
+
 OpenGLShaderLoader::Shader::Shader(const GLchar* vertexShaderSource, const GLchar* fragmentShaderSource, bool useFile)
 {
 	int vertexShader, fragmentShader;
