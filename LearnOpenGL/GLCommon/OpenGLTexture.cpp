@@ -2,22 +2,24 @@
 #include "GLCommon/OpenGLTexture.h"
 #include "GLCommon/stb_image.h"
 
-OpenGLImageLoader::Texture2D::Texture2D()
+using namespace GLCommon;
+
+Texture2D::Texture2D()
 {
 
 }
 
-OpenGLImageLoader::Texture2D::~Texture2D()
+Texture2D::~Texture2D()
 {
 	glDeleteTextures(1, &m_texture);
 }
 
-void OpenGLImageLoader::Texture2D::Load(std::string imagePath)
+void Texture2D::Load(std::string imagePath)
 {
 	Load(imagePath.c_str());
 }
 
-void OpenGLImageLoader::Texture2D::Load(const GLchar* imagePath)
+void Texture2D::Load(const GLchar* imagePath)
 {
 	// ªÒ»° ID
 	glGenTextures(1, &m_texture);
@@ -62,7 +64,7 @@ void OpenGLImageLoader::Texture2D::Load(const GLchar* imagePath)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void OpenGLImageLoader::Texture2D::SetParams(int wh, int wv, int minFilter, int magFilter)
+void Texture2D::SetParams(int wh, int wv, int minFilter, int magFilter)
 {
 	m_textureWrapHorizontal = wh;
 	m_textureWrapVertical = wv;
@@ -70,13 +72,13 @@ void OpenGLImageLoader::Texture2D::SetParams(int wh, int wv, int minFilter, int 
 	m_textureMagFilter = magFilter;
 }
 
-OpenGLImageLoader::Texture2D::Texture2D(const GLchar* imagePath, int wh, int wv, int minFilter, int magFilter)
+Texture2D::Texture2D(const GLchar* imagePath, int wh, int wv, int minFilter, int magFilter)
 {
 	SetParams(wh, wv, minFilter, magFilter);
 	Load(imagePath);
 }
 
-OpenGLImageLoader::Texture2D::Texture2D(const GLchar* imagePath)
+Texture2D::Texture2D(const GLchar* imagePath)
 {
 	Load(imagePath);
 }

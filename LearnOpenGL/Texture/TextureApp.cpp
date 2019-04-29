@@ -24,7 +24,7 @@ bool TextureApp::Init()
 		return false;
 
 	GLCommon::OpenGLFileSystem fs;
-	m_shader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder()+"texture_vertex.glsl", 
+	m_shader = new GLCommon::Shader(fs.GetShaderFolder()+"texture_vertex.glsl",
 		fs.GetShaderFolder()+"texture_fragment.glsl");
 
 	m_texture01.Load(fs.GetTextureFolder()+"wall.jpg");

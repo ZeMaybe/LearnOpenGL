@@ -23,9 +23,9 @@ private:
 	void BUildVAO();
 
 private:
-	OpenGLShaderLoader::Shader* m_shader = 0;     // 着色器程序
-	OpenGLImageLoader::Texture2D m_texture01;     // 纹理1 -- 砖墙  
-	OpenGLImageLoader::Texture2D m_texture02;     // 纹理2 -- 笑脸
+	GLCommon::Shader* m_shader = 0;     // 着色器程序
+	GLCommon::Texture2D m_texture01;     // 纹理1 -- 砖墙  
+	GLCommon::Texture2D m_texture02;     // 纹理2 -- 笑脸
 
 	unsigned int m_vao = 0;
 	unsigned int m_vbo = 0;

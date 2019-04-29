@@ -119,20 +119,20 @@ void OpenGLApp::ProcessInput()
 	if (m_camera)
 	{
 		if (glfwGetKey(m_screenWindow, GLFW_KEY_W) == GLFW_PRESS)
-			m_camera->ProcessKeyboard(OpenGLCamera::FORWARD, m_deltaTime);
+			m_camera->ProcessKeyboard(GLCommon::FORWARD, m_deltaTime);
 		if (glfwGetKey(m_screenWindow, GLFW_KEY_S) == GLFW_PRESS)
-			m_camera->ProcessKeyboard(OpenGLCamera::BACKWARD, m_deltaTime);
+			m_camera->ProcessKeyboard(GLCommon::BACKWARD, m_deltaTime);
 		if (glfwGetKey(m_screenWindow, GLFW_KEY_A) == GLFW_PRESS)
-			m_camera->ProcessKeyboard(OpenGLCamera::LEFT, m_deltaTime);
+			m_camera->ProcessKeyboard(GLCommon::LEFT, m_deltaTime);
 		if (glfwGetKey(m_screenWindow, GLFW_KEY_D) == GLFW_PRESS)
-			m_camera->ProcessKeyboard(OpenGLCamera::RIGHT, m_deltaTime); 
+			m_camera->ProcessKeyboard(GLCommon::RIGHT, m_deltaTime);
 	}
 }
 
 void OpenGLApp::Render()
 {
 	//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

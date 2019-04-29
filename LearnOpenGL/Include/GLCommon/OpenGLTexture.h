@@ -4,7 +4,7 @@
 
 #include "GLCommon/OpenGLUtility.h"
 
-namespace OpenGLImageLoader
+namespace GLCommon
 {
 	class Texture2D
 	{

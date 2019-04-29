@@ -51,7 +51,7 @@ protected:
 	double m_lastMouseX = 0.0;
 	double m_lastMouseY = 0.0;
 
-	OpenGLCamera::FPCamera* m_camera = 0;
+	GLCommon::FPCamera* m_camera = 0;
 };
 
 #endif // OpenGLAPP_h__

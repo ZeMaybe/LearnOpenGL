@@ -21,7 +21,7 @@ private:
 	void BUildVAO();
 
 	//int m_shaderProgram = 0;
-	OpenGLShaderLoader::Shader* m_shader = 0;
+	GLCommon::Shader* m_shader = 0;
 	unsigned int m_vao = 0;
 	unsigned int m_vbo = 0;
 	unsigned int m_ebo = 0;

@@ -1,21 +1,20 @@
 
-#include "LightingMapsApp.h"
+#include "LightCaster.h"
 #include "GLCommon/FileSystem.h"
 
-LightingMapsApp theApp;
+LightCasterApp theApp;
 
-
-LightingMapsApp::LightingMapsApp()
-	:OpenGLApp("LightingMaps")
+LightCasterApp::LightCasterApp()
+	:OpenGLApp("Light caster")
 {
-}
 
-LightingMapsApp::~LightingMapsApp()
+}
+LightCasterApp::~LightCasterApp()
 {
 	ClearnUp();
 }
 
-bool LightingMapsApp::Init()
+bool LightCasterApp::Init()
 {
 	if (!OpenGLApp::Init())
 		return false;
@@ -23,37 +22,60 @@ bool LightingMapsApp::Init()
 	m_camera = new GLCommon::FPCamera(glm::vec3(0.0f, 0.0f, 10.0f));
 
 	GLCommon::OpenGLFileSystem fs;
-	m_shader = new GLCommon::Shader(fs.GetShaderFolder() + "lightingmaps_vertex.glsl",
-		fs.GetShaderFolder() + "lightingmaps_fragment.glsl");
-
-	m_lightShader = new GLCommon::Shader(fs.GetShaderFolder() + "light_vertex2.glsl",
+	m_shader = new GLCommon::Shader(fs.GetShaderFolder() + "lightcaster_vertex.glsl",
+		fs.GetShaderFolder() + "lightcaster_fragment.glsl");
+	m_pointLightShader = new GLCommon::Shader(fs.GetShaderFolder() + "light_vertex2.glsl",
 		fs.GetShaderFolder() + "light_fragment2.glsl");
 
 	BUildVAO();
 
 	m_diffuseMap.Load(fs.GetTextureFolder() + "box.png");
 	m_specularMap.Load(fs.GetTextureFolder() + "box_specular.png");
-
 	m_shader->Use();
-	m_shader->SetInt("material.diffuse", 0);
-	m_shader->SetInt("material.specular", 1);	
 
+	// material
+	m_shader->SetInt("material.diffuse", 0);
+	m_shader->SetInt("material.specular", 1); 
+	m_shader->SetFloat("material.shininess", 32.0f);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_diffuseMap.Texture());
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_specularMap.Texture());
 
+	// direction light
+	m_shader->SetVec3("dirLight.ambient", 0.2f, 0.2f, 0.2f);
+	m_shader->SetVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
+	m_shader->SetVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+	m_shader->SetVec3("dirLight.direction",m_directionLightDirection);
+
+	// point light
+	m_shader->SetFloat("pointLight.constant", 1.0f);
+	m_shader->SetFloat("pointLight.linear", 0.09f);
+	m_shader->SetFloat("pointLight.quadratic", 0.032f);
+	m_shader->SetVec3("pointLight.position", m_pointLightPosition);
+	m_shader->SetVec3("pointLight.ambient", 0.2f, 0.2f, 0.2f);
+	m_shader->SetVec3("pointLight.diffuse", 0.5f, 0.5f, 0.5f);
+	m_shader->SetVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
+
+	// spot light
+	m_shader->SetVec3("spotLight.ambient", 0.2f, 0.2f, 0.2f);
+	m_shader->SetVec3("spotLight.diffuse", 0.5f, 0.5f, 0.5f);
+	m_shader->SetVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+	m_shader->SetFloat("spotLight.constant", 1.0f);
+	m_shader->SetFloat("spotLight.linear", 0.09f);
+	m_shader->SetFloat("spotLight.quadratic", 0.032f);
+	m_shader->SetFloat("spotLight.cutoff", glm::cos(glm::radians(12.5f)));
+	m_shader->SetFloat("spotLight.outerCutoff", glm::cos(glm::radians(17.5f)));
+
 	glEnable(GL_DEPTH_TEST);
 	return true;
 }
 
-void LightingMapsApp::UpdateScene()
+void LightCasterApp::UpdateScene()
 {
-	//m_lightPos.y = sin(glfwGetTime()) * 5;
-	//m_lightPos.x = cos(glfwGetTime()) * 5;
-}
 
-void LightingMapsApp::Render()
+}
+void LightCasterApp::Render()
 {
 	OpenGLApp::Render();
 
@@ -61,12 +83,9 @@ void LightingMapsApp::Render()
 	m_shader->SetMat4("view", m_camera->GetViewMatrix());
 	m_shader->SetMat4("proj", m_camera->GetProjMatrix(1.0f*m_screenWidth / m_screenHeight, 0.1f, 100.0f));
 	m_shader->SetVec3("viewPos", m_camera->m_position);
-	m_shader->SetFloat("material.shininess", 32.0f); 
 
-	m_shader->SetVec3("light.position", m_lightPos);
-	m_shader->SetVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-	m_shader->SetVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-	m_shader->SetVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	m_shader->SetVec3("spotLight.position", m_camera->m_position);
+	m_shader->SetVec3("spotLight.direction", m_camera->m_front);
 
 	glBindVertexArray(m_vao);
 
@@ -94,34 +113,36 @@ void LightingMapsApp::Render()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 
-	// light cube
+
+	// point light cube
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, m_lightPos);
+	model = glm::translate(model, m_pointLightPosition);
 	model = glm::scale(model, glm::vec3(0.2f));
 
-	m_lightShader->Use();
-	m_lightShader->SetMat4("model", model);
-	m_lightShader->SetMat4("view", m_camera->GetViewMatrix());
-	m_lightShader->SetMat4("proj", m_camera->GetProjMatrix(1.0f*m_screenWidth / m_screenHeight, 0.1f, 100.0f));
-	glBindVertexArray(m_lightVao);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	m_pointLightShader->Use();
+	m_pointLightShader->SetMat4("model", model);
+	m_pointLightShader->SetMat4("view", m_camera->GetViewMatrix());
+	m_pointLightShader->SetMat4("proj", m_camera->GetProjMatrix(1.0f*m_screenWidth / m_screenHeight, 0.1f, 100.0f));
+	glBindVertexArray(m_pointLightVao);
+	glDrawArrays(GL_TRIANGLES, 0, 36); 
 
-	glfwSwapBuffers(m_screenWindow);
+	glfwSwapBuffers(m_screenWindow); 
 }
 
-void LightingMapsApp::ClearnUp()
+void LightCasterApp::ClearnUp()
 {
 	glDeleteVertexArrays(1, &m_vao);
-	glDeleteVertexArrays(1, &m_lightVao);
+	glDeleteVertexArrays(1, &m_pointLightVao);
 	glDeleteBuffers(1, &m_vbo);
 
 	SAFE_DELETE_POINT(m_shader);
-	SAFE_DELETE_POINT(m_lightShader);
+	SAFE_DELETE_POINT(m_pointLightShader);
 
 	OpenGLApp::ClearnUp();
 }
 
-void LightingMapsApp::BUildVAO()
+
+void LightCasterApp::BUildVAO()
 {
 	// vertices
 	float vertices[] = {
@@ -188,13 +209,14 @@ void LightingMapsApp::BUildVAO()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	// light vao
-	glGenVertexArrays(1, &m_lightVao);
-	glBindVertexArray(m_lightVao);
+	// point light vao
+	glGenVertexArrays(1, &m_pointLightVao);
+	glBindVertexArray(m_pointLightVao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-}
+} 
+
  

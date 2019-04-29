@@ -28,11 +28,11 @@ bool BoxApp::Init()
 	if (!OpenGLApp::Init())
 		return false;
 
-	m_camera = new OpenGLCamera::FPCamera();
+	m_camera = new GLCommon::FPCamera();
 
 	GLCommon::OpenGLFileSystem fs;
 
-	m_shader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder() + "box_vertex.glsl",
+	m_shader = new GLCommon::Shader(fs.GetShaderFolder() + "box_vertex.glsl",
 		fs.GetShaderFolder() + "box_fragment.glsl");
 
 	m_texture01.Load(fs.GetTextureFolder() + "wall.jpg");

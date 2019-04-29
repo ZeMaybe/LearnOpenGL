@@ -1,7 +1,7 @@
 
 #include "GLCommon/OpenGLCamera.h"
 
-using namespace OpenGLCamera;
+using namespace GLCommon;
 
 FPCamera::FPCamera(glm::vec3 position,glm::vec3 worldUp,float yaw,float pitch)
 {
@@ -47,16 +47,16 @@ void FPCamera::ProcessKeyboard(CameraMovement direction, float deltaTime)
 
 	switch (direction)
 	{
-	case OpenGLCamera::FORWARD:
+	case GLCommon::FORWARD:
 		m_position += m_front*velocity;
 		break;
-	case OpenGLCamera::BACKWARD:
+	case GLCommon::BACKWARD:
 		m_position -= m_front*velocity;
 		break;
-	case OpenGLCamera::LEFT:
+	case GLCommon::LEFT:
 		m_position -= m_right*velocity;
 		break;
-	case OpenGLCamera::RIGHT:
+	case GLCommon::RIGHT:
 		m_position += m_right*velocity;
 		break;
 	}

@@ -21,7 +21,7 @@ bool TriangleApp::Init()
 		return false;
 
 	GLCommon::OpenGLFileSystem fs;
-	m_shader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder() + "first_triangle_vertex.glsl",
+	m_shader = new GLCommon::Shader(fs.GetShaderFolder() + "first_triangle_vertex.glsl",
 		fs.GetShaderFolder() + "first_triangle_fragment.glsl");
 
 	BUildVAO();

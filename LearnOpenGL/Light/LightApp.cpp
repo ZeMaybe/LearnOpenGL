@@ -20,12 +20,12 @@ bool LightApp::Init()
 	if (!OpenGLApp::Init())
 		return false;
 
-	m_camera = new OpenGLCamera::FPCamera(glm::vec3(0.0f, 0.0f, 10.0f));
+	m_camera = new GLCommon::FPCamera(glm::vec3(0.0f, 0.0f, 10.0f));
 
 	GLCommon::OpenGLFileSystem fs;
-	m_shader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder() + "light_vertex.glsl",
+	m_shader = new GLCommon::Shader(fs.GetShaderFolder() + "light_vertex.glsl",
 		fs.GetShaderFolder() + "light_fragment.glsl");
-	m_lightShader = new OpenGLShaderLoader::Shader(fs.GetShaderFolder() + "light_vertex2.glsl",
+	m_lightShader = new GLCommon::Shader(fs.GetShaderFolder() + "light_vertex2.glsl",
 		fs.GetShaderFolder() + "light_fragment2.glsl");
 
 	BUildVAO();
