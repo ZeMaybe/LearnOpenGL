@@ -61,7 +61,6 @@ uniform DirectionLight dirLight;
 uniform PointLight pointLight;
 uniform SpotLight spotLight;
 
-
 vec3 CalcDirLight(DirectionLight light,vec3 normal,vec3 viewDir)
 {
     vec3 lightDir = normalize(-light.direction);

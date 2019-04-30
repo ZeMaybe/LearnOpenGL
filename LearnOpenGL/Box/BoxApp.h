@@ -5,6 +5,7 @@
 #include "GLCommon/OpenGLAPP.h"
 #include "GLCommon/OpenGLShaderLoader.h"
 #include "GLCommon/OpenGLTexture.h"
+#include "GLCommon/Model.h"
 
 class BoxApp : public OpenGLApp
 {
@@ -13,8 +14,6 @@ public:
 	~BoxApp();
 
 	bool Init()override;
-	void OnResize(unsigned int width, unsigned int height)override;
-	void ProcessInput()override;
 	void UpdateScene()override;
 	void Render()override;
 	void ClearnUp()override;
@@ -29,7 +28,6 @@ private:
 
 	unsigned int m_vao = 0;
 	unsigned int m_vbo = 0;
-	//unsigned int m_ebo = 0;
 };
 
 #endif // BoxApp_h__

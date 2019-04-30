@@ -15,7 +15,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
 
 Mesh::~Mesh()
 {
-	ClearUp();
+	//ClearUp();
 }
 
 void Mesh::Draw(Shader shader)

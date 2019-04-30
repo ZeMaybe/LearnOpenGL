@@ -5,11 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include "GLCommon/FileSystem.h"
+#include "GLCommon/Model.h"
 
 BoxApp theApp;
 
@@ -20,7 +17,7 @@ BoxApp::BoxApp()
 
 BoxApp::~BoxApp()
 {
-	SAFE_DELETE_POINT(m_shader);
+	ClearnUp();
 }
 
 bool BoxApp::Init()
@@ -28,7 +25,7 @@ bool BoxApp::Init()
 	if (!OpenGLApp::Init())
 		return false;
 
-	m_camera = new GLCommon::FPCamera();
+	m_camera = new GLCommon::FPCamera(glm::vec3(0.0f,0.0f,5.0f));
 
 	GLCommon::OpenGLFileSystem fs;
 
@@ -37,12 +34,6 @@ bool BoxApp::Init()
 
 	m_texture01.Load(fs.GetTextureFolder() + "wall.jpg");
 	m_texture02.Load(fs.GetTextureFolder() + "awesomeface.png");
-
-	// 测试模型加载 -- 无实际解析代码
-
-	std::string path = fs.GetModelsFolder() + "nanosuit/nanosuit.obj";
-	Assimp::Importer importer;
-	const aiScene * scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	BUildVAO();
 
@@ -62,39 +53,12 @@ bool BoxApp::Init()
 	return true;
 }
 
-
-void BoxApp::OnResize(unsigned int width, unsigned int height)
-{
-	OpenGLApp::OnResize(width, height);
-}
-
-void BoxApp::ProcessInput()
-{
-	OpenGLApp::ProcessInput();
-}
-
 void BoxApp::UpdateScene()
 {
 	float mixValue = (sin(glfwGetTime()) + 1.0f)*0.5f;
 	m_shader->SetFloat("mixValue", mixValue);
 
-	//glm::mat4 model = glm::mat4(1.0f);
-	//model = glm::rotate(model, (float)glfwGetTime()*glm::radians(-55.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-	//m_shader->SetMat4x4("model", glm::value_ptr(model));
-
-	//float radius = 20.0f;
-	//float camX = sin(glfwGetTime())*radius;
-	//float camZ = cos(glfwGetTime())*radius;
-	//glm::mat4 view = glm::mat4(1.0f);
-	//view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0, 1.0, 0.0));
-	//m_shader->SetMat4("view", view);
-
-	glm::mat4 view = m_camera->GetViewMatrix();
-	m_shader->SetMat4("view", view);
-
-	//glm::mat4 projection = glm::mat4(1.0f);
-	//projection = glm::perspective(glm::radians(45.0f), (1.0f*m_screenWidth) / (1.0f*m_screenHeight), 0.1f, 100.0f);
-	//m_shader->SetMat4("proj", projection);
+	m_shader->SetMat4("view", m_camera->GetViewMatrix());
 	m_shader->SetMat4("proj", m_camera->GetProjMatrix(1.0f*m_screenWidth / m_screenHeight, 0.1f, 100.0f));
 }
 
@@ -136,6 +100,8 @@ void BoxApp::ClearnUp()
 {
 	glDeleteVertexArrays(1, &m_vao);
 	glDeleteBuffers(1, &m_vbo);
+
+	SAFE_DELETE_POINT(m_shader);
 	OpenGLApp::ClearnUp();
 }
 

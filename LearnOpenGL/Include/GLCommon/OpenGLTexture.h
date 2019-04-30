@@ -18,8 +18,12 @@ namespace GLCommon
 		unsigned int Texture()const { return m_texture; }
 
 	public:
+		static unsigned int Load(std::string imagePath,int* widht,int* height,int* channelsInFile);
+		static unsigned int Load(const GLchar* imagePath, int* widht, int* height, int* channelsInFile);
+		
 		void Load(std::string imagePath);
 		void Load(const GLchar* imagePath);
+		void SetParams();
 		void SetParams(int wh, int wv, int minFilter, int magFilter);
 
 	private:
