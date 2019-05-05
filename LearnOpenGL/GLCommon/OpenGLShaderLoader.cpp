@@ -124,6 +124,12 @@ Shader::Shader(std::string vertexShaderSource, std::string fragmentShaderSource)
 	glDeleteShader(fragmentShader);
 }
 
+Shader::Shader(const Shader& oth)
+{
+	this->m_shaderProgram = oth.m_shaderProgram;
+}
+
+
 Shader::Shader(const GLchar* vertexShaderSource, const GLchar* fragmentShaderSource, bool useFile)
 {
 	int vertexShader, fragmentShader;
@@ -155,12 +161,12 @@ Shader::Shader(const GLchar* vertexShaderSource, const GLchar* fragmentShaderSou
 
 Shader::~Shader()
 {
-	glDeleteProgram(m_shaderProgram);
+	//glDeleteProgram(m_shaderProgram);
 }
 
 void Shader::Use()
 {
-	glUseProgram(m_shaderProgram); 
+	GL_CALL(glUseProgram(m_shaderProgram)); 
 }
 
 void Shader::SetBool(const GLchar* name, bool v) const

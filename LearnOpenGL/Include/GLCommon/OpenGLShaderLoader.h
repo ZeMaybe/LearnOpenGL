@@ -13,6 +13,7 @@ namespace GLCommon
 	public:
 		Shader(const GLchar* vertexShaderSource, const GLchar* fragmentShaderSource, bool useFile = true);
 		Shader(std::string vertexShaderSource, std::string fragmentShaderSource);
+		Shader(const Shader& oth);
 		~Shader();
 
 		void Use(); 

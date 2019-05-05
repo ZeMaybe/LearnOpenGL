@@ -13,12 +13,12 @@ public:
 
 public:
 	bool Init()override;
-	void UpdateScene()override;
 	void Render()override;
 	void ClearnUp()override;
 
 private:
 	GLCommon::Shader* m_shader = 0;     // 着色器程序
+	GLCommon::Shader* m_borderShader = 0;     // 着色器程序
 	GLCommon::Model* m_model = 0;
 };
 
