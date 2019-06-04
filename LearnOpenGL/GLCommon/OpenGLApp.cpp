@@ -75,6 +75,8 @@ bool OpenGLApp::Init()
 
 	//glfwSetInputMode(m_screenWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+	glEnable(GL_CULL_FACE);
+
 	return true;
 }
 
